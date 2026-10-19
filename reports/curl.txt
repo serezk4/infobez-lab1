@@ -1,0 +1,57 @@
+HTTP-проверки через curl. Временная база данных; пароли и JWT скрыты.
+
+Без токена
+GET /api/data -> 401
+{"error": "Authentication required"}
+
+SQL-инъекция
+POST /auth/login -> 401
+{"error": "Invalid credentials"}
+
+Неверный пароль
+POST /auth/login -> 401
+{"error": "Invalid credentials"}
+
+Вход
+POST /auth/login -> 200
+{"access_token": "[REDACTED]", "expires_in": 900, "token_type": "Bearer"}
+
+Создание заметки
+POST /api/data -> 201
+{"id": 1, "text": "Моя первая заметка"}
+
+Чтение своих заметок
+GET /api/data -> 200
+{"data": [{"id": 1, "text": "Моя первая заметка"}]}
+
+XSS-нагрузка
+POST /api/data -> 201
+{"id": 2, "text": "&lt;script&gt;alert(1)&lt;/script&gt;"}
+
+Чтение экранированного текста
+GET /api/data -> 200
+{"data": [{"id": 1, "text": "Моя первая заметка"}, {"id": 2, "text": "&lt;script&gt;alert(1)&lt;/script&gt;"}]}
+
+Вход второго пользователя
+POST /auth/login -> 200
+{"access_token": "[REDACTED]", "expires_in": 900, "token_type": "Bearer"}
+
+Проверка доступа к чужим заметкам
+GET /api/data -> 200
+{"data": []}
+
+Неверный JWT
+GET /api/data -> 401
+{"error": "Invalid or expired token"}
+
+Просроченный JWT
+GET /api/data -> 401
+{"error": "Invalid or expired token"}
+
+Пустая заметка
+POST /api/data -> 400
+{"error": "Text must contain 1–2000 characters"}
+
+Слишком длинная заметка
+POST /api/data -> 400
+{"error": "Text must contain 1–2000 characters"}

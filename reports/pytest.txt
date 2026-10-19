@@ -1,0 +1,48 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.0, pytest-9.1.1, pluggy-1.7.0 -- /Users/serezk4/infobez/lab1/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/serezk4/infobez/lab1
+configfile: pytest.ini
+testpaths: tests
+plugins: platformdirs-4.13.5
+collecting ... collected 36 items
+
+tests/test_security.py::test_notes_are_private PASSED                    [  2%]
+tests/test_security.py::test_unauthorized[-get] PASSED                   [  5%]
+tests/test_security.py::test_unauthorized[-post] PASSED                  [  8%]
+tests/test_security.py::test_unauthorized[Bearer garbage-get] PASSED     [ 11%]
+tests/test_security.py::test_unauthorized[Bearer garbage-post] PASSED    [ 13%]
+tests/test_security.py::test_unauthorized[Basic abc-get] PASSED          [ 16%]
+tests/test_security.py::test_unauthorized[Basic abc-post] PASSED         [ 19%]
+tests/test_security.py::test_unauthorized[Bearer-get] PASSED             [ 22%]
+tests/test_security.py::test_unauthorized[Bearer-post] PASSED            [ 25%]
+tests/test_security.py::test_login_rejected[alice' OR 1=1 ---x] PASSED   [ 27%]
+tests/test_security.py::test_login_rejected[alice-' OR 1=1 --] PASSED    [ 30%]
+tests/test_security.py::test_login_rejected[alice-wrong] PASSED          [ 33%]
+tests/test_security.py::test_login_rejected[unknown-wrong] PASSED        [ 36%]
+tests/test_security.py::test_xss_and_sql_payload_stored_as_data PASSED   [ 38%]
+tests/test_security.py::test_invalid_jwt[expired] PASSED                 [ 41%]
+tests/test_security.py::test_invalid_jwt[future] PASSED                  [ 44%]
+tests/test_security.py::test_invalid_jwt[signature] PASSED               [ 47%]
+tests/test_security.py::test_invalid_jwt[algorithm] PASSED               [ 50%]
+tests/test_security.py::test_invalid_jwt[issuer] PASSED                  [ 52%]
+tests/test_security.py::test_invalid_jwt[audience] PASSED                [ 55%]
+tests/test_security.py::test_invalid_jwt[missing] PASSED                 [ 58%]
+tests/test_security.py::test_invalid_jwt[unknown] PASSED                 [ 61%]
+tests/test_security.py::test_bad_login_input[None] PASSED                [ 63%]
+tests/test_security.py::test_bad_login_input[payload1] PASSED            [ 66%]
+tests/test_security.py::test_bad_login_input[payload2] PASSED            [ 69%]
+tests/test_security.py::test_bad_login_input[payload3] PASSED            [ 72%]
+tests/test_security.py::test_bad_login_input[payload4] PASSED            [ 75%]
+tests/test_security.py::test_bad_note_input[payload0] PASSED             [ 77%]
+tests/test_security.py::test_bad_note_input[payload1] PASSED             [ 80%]
+tests/test_security.py::test_bad_note_input[payload2] PASSED             [ 83%]
+tests/test_security.py::test_bad_note_input[payload3] PASSED             [ 86%]
+tests/test_security.py::test_bad_note_input[payload4] PASSED             [ 88%]
+tests/test_security.py::test_bad_note_input[payload5] PASSED             [ 91%]
+tests/test_security.py::test_headers_limits_and_content_type PASSED      [ 94%]
+tests/test_security.py::test_password_hash_and_cli PASSED                [ 97%]
+tests/test_security.py::test_secret_required PASSED                      [100%]
+
+------ generated xml file: /Users/serezk4/infobez/lab1/reports/pytest.xml ------
+============================== 36 passed in 7.08s ==============================

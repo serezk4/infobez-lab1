@@ -1,0 +1,8 @@
+[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[tester]	WARNING	nosec encountered (B105), but no failed test on file secure_api/__init__.py:182
+[tester]	WARNING	nosec encountered (B105), but no failed test on file secure_api/__init__.py:185
+[tester]	WARNING	nosec encountered (B105), but no failed test on file secure_api/__init__.py:184
+[json]	INFO	JSON output written to file: reports/bandit.json

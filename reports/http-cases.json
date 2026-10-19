@@ -1,0 +1,203 @@
+{
+  "cases": [
+    {
+      "case": "Без токена",
+      "method": "GET",
+      "path": "/api/data",
+      "request": null,
+      "authenticated": false,
+      "status": 401,
+      "response": {
+        "error": "Authentication required"
+      }
+    },
+    {
+      "case": "SQL-инъекция",
+      "method": "POST",
+      "path": "/auth/login",
+      "request": {
+        "username": "demo' OR 1=1 --",
+        "password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 401,
+      "response": {
+        "error": "Invalid credentials"
+      }
+    },
+    {
+      "case": "Неверный пароль",
+      "method": "POST",
+      "path": "/auth/login",
+      "request": {
+        "username": "demo",
+        "password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 401,
+      "response": {
+        "error": "Invalid credentials"
+      }
+    },
+    {
+      "case": "Вход",
+      "method": "POST",
+      "path": "/auth/login",
+      "request": {
+        "username": "demo",
+        "password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 200,
+      "response": {
+        "access_token": "[REDACTED]",
+        "expires_in": 900,
+        "token_type": "Bearer"
+      }
+    },
+    {
+      "case": "Создание заметки",
+      "method": "POST",
+      "path": "/api/data",
+      "request": {
+        "text": "Моя первая заметка"
+      },
+      "authenticated": true,
+      "status": 201,
+      "response": {
+        "id": 1,
+        "text": "Моя первая заметка"
+      }
+    },
+    {
+      "case": "Чтение своих заметок",
+      "method": "GET",
+      "path": "/api/data",
+      "request": null,
+      "authenticated": true,
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id": 1,
+            "text": "Моя первая заметка"
+          }
+        ]
+      }
+    },
+    {
+      "case": "XSS-нагрузка",
+      "method": "POST",
+      "path": "/api/data",
+      "request": {
+        "text": "<script>alert(1)</script>"
+      },
+      "authenticated": true,
+      "status": 201,
+      "response": {
+        "id": 2,
+        "text": "&lt;script&gt;alert(1)&lt;/script&gt;"
+      }
+    },
+    {
+      "case": "Чтение экранированного текста",
+      "method": "GET",
+      "path": "/api/data",
+      "request": null,
+      "authenticated": true,
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "id": 1,
+            "text": "Моя первая заметка"
+          },
+          {
+            "id": 2,
+            "text": "&lt;script&gt;alert(1)&lt;/script&gt;"
+          }
+        ]
+      }
+    },
+    {
+      "case": "Вход второго пользователя",
+      "method": "POST",
+      "path": "/auth/login",
+      "request": {
+        "username": "other",
+        "password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 200,
+      "response": {
+        "access_token": "[REDACTED]",
+        "expires_in": 900,
+        "token_type": "Bearer"
+      }
+    },
+    {
+      "case": "Проверка доступа к чужим заметкам",
+      "method": "GET",
+      "path": "/api/data",
+      "request": null,
+      "authenticated": true,
+      "status": 200,
+      "response": {
+        "data": []
+      }
+    },
+    {
+      "case": "Неверный JWT",
+      "method": "GET",
+      "path": "/api/data",
+      "request": null,
+      "authenticated": true,
+      "status": 401,
+      "response": {
+        "error": "Invalid or expired token"
+      }
+    },
+    {
+      "case": "Просроченный JWT",
+      "method": "GET",
+      "path": "/api/data",
+      "request": null,
+      "authenticated": true,
+      "status": 401,
+      "response": {
+        "error": "Invalid or expired token"
+      }
+    },
+    {
+      "case": "Пустая заметка",
+      "method": "POST",
+      "path": "/api/data",
+      "request": {
+        "text": ""
+      },
+      "authenticated": true,
+      "status": 400,
+      "response": {
+        "error": "Text must contain 1–2000 characters"
+      }
+    },
+    {
+      "case": "Слишком длинная заметка",
+      "method": "POST",
+      "path": "/api/data",
+      "request": {
+        "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "authenticated": true,
+      "status": 400,
+      "response": {
+        "error": "Text must contain 1–2000 characters"
+      }
+    }
+  ],
+  "password_storage": {
+    "method": "scrypt:32768:8:1",
+    "equals_plaintext": false,
+    "users_count": 2
+  }
+}
